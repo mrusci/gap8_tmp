@@ -8,11 +8,24 @@ ifndef GAP_SDK_HOME
   $(error Source sourceme in gap_sdk first)
 endif
 
-include common.mk
+MODEL_ID=99
+MODEL_PREFIX?=model
+AT_INPUT_WIDTH?=320
+AT_INPUT_HEIGHT?=320
+AT_INPUT_COLORS?=3
+NNTOOL_SCRIPT?=models/nntool_scripts/nntool_script
+
+
+## AT GENERATED NAMES
+AT_CONSTRUCT = $(MODEL_PREFIX)CNN_Construct
+AT_DESTRUCT = $(MODEL_PREFIX)CNN_Destruct
+AT_CNN = $(MODEL_PREFIX)CNN
+AT_L3_ADDR = $(MODEL_PREFIX)_L3_Flash
+
 QUANT_FLAG ?= -q
 
 ifeq ($(AT_INPUT_WIDTH), 320)
-        IMAGE=$(CURDIR)/images/maksssksksss701_00_letterbox.ppm
+    IMAGE=$(CURDIR)/images/maksssksksss701_00_letterbox.ppm
 endif
 
 ifeq ($(AT_INPUT_WIDTH), 224)
@@ -48,7 +61,7 @@ include common/model_decl.mk
 # Here we set the default memory allocation for the generated kernels
 # REMEMBER THAT THE L1 MEMORY ALLOCATION MUST INCLUDE SPACE
 # FOR ALLOCATED STACKS!
-CLUSTER_STACK_SIZE?=6096
+CLUSTER_STACK_SIZE?=8096
 CLUSTER_SLAVE_STACK_SIZE?=1024
 TOTAL_STACK_SIZE = $(shell expr $(CLUSTER_STACK_SIZE) \+ $(CLUSTER_SLAVE_STACK_SIZE) \* 7)
 ifeq '$(TARGET_CHIP_FAMILY)' 'GAP9'

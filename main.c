@@ -123,12 +123,11 @@ static int open_camera_himax(struct pi_device *device)
 static void RunNetwork()
 {
 printf("Running on cluster\n");
-/*#ifdef PERF
+#ifdef PERF
     printf("Start timer\n");
     gap_cl_starttimer();
     gap_cl_resethwtimer();
 #endif
-  */  //AT_CNN((unsigned char *) l3_buff, ResOut);
     AT_CNN((unsigned char *) l3_buff, hm_ResOut, sz_ResOut);
     printf("Runner completed\n");
 }
@@ -316,32 +315,30 @@ int body(void)
 	printf("Predicted class:\t%d\n", outclass);
 	printf("With confidence:\t%d\n", MaxPrediction);
 
-
+*/
 	// Performance counters
 #ifdef PERF
 	{
-		unsigned int TotalCycles = 0, TotalOper = 0;
+		unsigned long long int TotalCycles = 0, TotalOper = 0;
 		printf("\n");
 		for (int i=0; i<(sizeof(AT_GraphPerf)/sizeof(unsigned int)); i++) {
 			printf("%45s: Cycles: %10d, Operations: %10d, Operations/Cycle: %f\n", AT_GraphNodeNames[i], AT_GraphPerf[i], AT_GraphOperInfosNames[i], ((float) AT_GraphOperInfosNames[i])/ AT_GraphPerf[i]);
 			TotalCycles += AT_GraphPerf[i]; TotalOper += AT_GraphOperInfosNames[i];
 		}
 		printf("\n");
-		printf("%45s: Cycles: %10d, Operations: %10d, Operations/Cycle: %f\n", "Total", TotalCycles, TotalOper, ((float) TotalOper)/ TotalCycles);
+		printf("%45s: Cycles: %f, Operations: %f, Operations/Cycle: %f\n", "Total", (float) TotalCycles, (float) TotalOper, ((float) TotalOper)/ TotalCycles);
 		printf("\n");
 	}
 #endif
-*/
-	// Netwrok Destructor
-	printf("pre chiamata destructor");
-	AT_DESTRUCT();
-	printf("fine chiamata destructor");
-	pi_cluster_close(&cluster_dev);
-	printf("fine chiamata pi_cluster_close");
-	pmsis_exit(0);
-	printf("fine chiamata pmsis_exit(0)");
 
-	return 0;
+	// Netwrok Destructor
+//	printf("pre chiamata destructor");
+	AT_DESTRUCT();
+//	printf("fine chiamata destructor");
+	pi_cluster_close(&cluster_dev);
+//	printf("fine chiamata pi_cluster_close");
+	pmsis_exit(0);
+
 }
 
 
